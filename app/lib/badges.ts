@@ -246,3 +246,8 @@ export function getBadgeGroupLabel(group: string) {
       return group
   }
 }
+// ラベル取得（Exam用）
+export function getBadgeLabelFromBadgeId(id: string) {
+  const def = listBadgeDefs().find((b) => b.id === id)
+  return def?.label ?? id
+}

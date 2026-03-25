@@ -57,3 +57,8 @@ export const quizCatalog: QuizDef[] = [
     ],
   },
 ]
+// 仮の互換関数（旧コード対応）
+export function getQuizDef(quizType: string) {
+  const found = quizCatalog.find((q) => q.id === quizType)
+  return found ?? null
+}
