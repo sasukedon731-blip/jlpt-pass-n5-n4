@@ -81,7 +81,7 @@ export async function submitAttackScore(params: {
   uid: string
   displayName: string
   score: number
-  bestLevel?: "N4" | "N3" | "N2"
+  bestLevel?: "N5" | "N4" | "N3" | "N2"
   bestStage?: number
 }): Promise<{ bestScore: number }> {
   // ✅ per-game leaderboard (Attack only)
