@@ -209,3 +209,40 @@ export function getRarityColors(rarity: BadgeRarity) {
       return { bg: "#f8fafc", fg: "#334155", border: "#cbd5e1" }
   }
 }
+// =========================
+// 追加（不足関数の補完）
+// =========================
+
+// achievementUnlock.ts 用
+export function computeUnlockedBadges(
+  currentBadges: string[],
+  state: any
+) {
+  const unlocked = evaluateBadgeUnlocks(state)
+  return unlocked.filter((id) => !currentBadges.includes(id))
+}
+
+// 実績ページ用
+export function getAllBadgeMeta(unlockedIds: string[]) {
+  const set = new Set(unlockedIds)
+  return listBadgeDefs().map((b) => ({
+    ...b,
+    unlocked: set.has(b.id),
+  }))
+}
+
+// グループ表示名
+export function getBadgeGroupLabel(group: string) {
+  switch (group) {
+    case "battle":
+      return "ゲーム"
+    case "study":
+      return "学習"
+    case "streak":
+      return "継続"
+    case "score":
+      return "スコア"
+    default:
+      return group
+  }
+}
