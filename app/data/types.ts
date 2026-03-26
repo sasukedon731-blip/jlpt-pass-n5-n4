@@ -45,6 +45,19 @@ export type QuizType =
   | "care-worker-exam"
 
 // ✅ 分野（セクション）定義
+
+export const JLPT_QUIZ_TYPES = ["japanese-n5", "japanese-n4"] as const
+
+export type JlptQuizType = (typeof JLPT_QUIZ_TYPES)[number]
+
+export function isJlptQuizType(value: unknown): value is JlptQuizType {
+  return typeof value === "string" && (JLPT_QUIZ_TYPES as readonly string[]).includes(value)
+}
+
+export function isQuizType(value: unknown): value is QuizType {
+  return typeof value === "string"
+}
+
 export type QuizSection = {
   id: string      // 例: "law" / "vocab" / "grammar" など（URL/保存に使う）
   label: string   // 表示名（日本語OK）

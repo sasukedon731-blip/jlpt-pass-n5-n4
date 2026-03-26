@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/(auth)/layout,_N_T_/(auth)/conversation/layout,_N_T_/(auth)/conversation/page,_N_T_/conversation"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/!KGF1dGgp/conversation/__PAGE__",
+    "/!KGF1dGgp/conversation",
+    "/!KGF1dGgp",
+    "/_index",
+    "/_head"
+  ]
+}

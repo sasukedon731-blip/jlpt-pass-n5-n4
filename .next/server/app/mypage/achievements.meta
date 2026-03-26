@@ -1,0 +1,17 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/(auth)/layout,_N_T_/(auth)/mypage/layout,_N_T_/(auth)/mypage/achievements/layout,_N_T_/(auth)/mypage/achievements/page,_N_T_/mypage/achievements"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/!KGF1dGgp/mypage/achievements/__PAGE__",
+    "/!KGF1dGgp/mypage/achievements",
+    "/!KGF1dGgp/mypage",
+    "/!KGF1dGgp",
+    "/_index",
+    "/_head"
+  ]
+}

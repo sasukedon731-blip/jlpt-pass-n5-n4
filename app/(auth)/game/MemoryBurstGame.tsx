@@ -7,12 +7,12 @@ import { auth } from "@/app/lib/firebase"
 import { submitAttackScore } from "./firestore"
 import GameEndActions from "./ui/GameEndActions"
 
-import type { QuizType } from "@/app/data/types"
+import type { JlptQuizType, QuizType } from "@/app/data/types"
 import type { GameMode, MemoryBurstQuestion } from "./types"
 import { getMemoryBurstPool } from "./pools/memoryBurstPools"
 import { addJlptBattleXp, comboMultiplier } from "./battleProgress"
 
-const ATTACK_LEVELS: QuizType[] = ["japanese-n5", "japanese-n4"]
+const ATTACK_LEVELS: JlptQuizType[] = ["japanese-n5", "japanese-n4"]
 
 function levelLabel(i: number): "N5" | "N4" {
   return i === 1 ? "N4" : "N5"
@@ -157,7 +157,7 @@ useEffect(() => {
           )
           if (nextC >= 30) {
             setAttackLevelIndex((idx) => {
-              const ni = (idx + 1) % 3
+              const ni = (idx + 1) % ATTACK_LEVELS.length
               setMaxLevelReached((m) => Math.max(m, ni))
               return ni
             })

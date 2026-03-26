@@ -18,17 +18,13 @@ import LegalFooter from "@/app/components/LegalFooter"
 const PLAN_LABEL: Record<PlanId, string> = {
   trial: "お試し（無料）",
   free: "無料",
-  "3": "3教材プラン",
-  "5": "5教材プラン",
-  "7": "7教材プラン",
+  "7": "全機能プラン（1か月）",
 }
 
 const PLAN_DESC: Record<PlanId, string> = {
-  trial: "まずは1教材で体験。気に入ったらプラン変更できます。",
+  trial: "まずは無料でお試し。",
   free: "無料のまま使う（お試しと同等）",
-  "3": "10以上の教材から3つ選んで受講",
-  "5": "10以上の教材から5つ選んで受講",
-  "7": "10以上の教材から7つ選んで受講",
+  "7": "N5・N4・ゲームを1か月すべて利用できます。",
 }
 
 /**
@@ -38,9 +34,7 @@ const PLAN_DESC: Record<PlanId, string> = {
 const PRICE_YEN_30D: Record<PlanId, number> = {
   trial: 0,
   free: 0,
-  "3": 500,
-  "5": 800,
-  "7": 1000,
+  "7": 300,
 }
 
 function formatYen(n: number) {
@@ -118,7 +112,7 @@ export default function PlansPage() {
   const [error, setError] = useState("")
 
   const [currentPlan, setCurrentPlan] = useState<PlanId>("trial")
-  const [pendingPlan, setPendingPlan] = useState<"3" | "5" | "7">("3")
+  const [pendingPlan, setPendingPlan] = useState<"7">("7")
   const [addAiConversation, setAddAiConversation] = useState(false)
   const [aiConversationEnabled, setAiConversationEnabled] = useState(false)
   const [billingMethod, setBillingMethod] = useState<"convenience" | "card">(
@@ -147,9 +141,7 @@ export default function PlansPage() {
       try {
         const st = await loadAndRepairUserPlanState(uid)
         setCurrentPlan(st.plan)
-        setPendingPlan(
-          st.plan === "3" || st.plan === "5" || st.plan === "7" ? st.plan : "3"
-        )
+        setPendingPlan("7")
         setDisplayName(st.displayName)
 
         const userSnap = await getDoc(doc(db, "users", uid))
@@ -209,7 +201,7 @@ export default function PlansPage() {
     setError("")
 
     try {
-      if (plan === "3" || plan === "5" || plan === "7") {
+      if (plan === "7") {
         await startCheckout(plan)
         return
       }
@@ -269,18 +261,18 @@ export default function PlansPage() {
       >
         <div style={styles.heroTitle}>このアプリでできること</div>
         <div style={styles.heroLead}>
-          仕事で使う日本語、資格対策、AIを使った実践練習を、1つのアプリでまとめて学べます。
+          JLPT N5・N4 の学習とゲームを、1つのアプリでまとめて使えます。
         </div>
 
         <div style={styles.heroPointList}>
           <div style={styles.heroPointItem}>
-            ・業種に合わせた教材を選んで期間集中学習
+            ・N5 / N4 の学習をすぐ始められる
           </div>
           <div style={styles.heroPointItem}>
             ・日本語バトルで毎日楽しく復習
           </div>
           <div style={styles.heroPointItem}>
-            ・AI会話を追加すれば実践的な会話練習も可能
+            ・マイページで学習記録を確認できる
           </div>
         </div>
 
@@ -295,9 +287,9 @@ export default function PlansPage() {
 
           <div style={styles.heroInfoCard}>
             <div style={styles.heroInfoLabel}>有料プランでできること</div>
-            <div style={styles.heroInfoTitle}>3 / 5 / 7教材を期間利用</div>
+            <div style={styles.heroInfoTitle}>全機能を1か月使い放題</div>
             <div style={styles.heroInfoText}>
-              選んだ教材を購入した期間中しっかり学習できます。期間終了後は、必要に応じて再購入してください。
+              300円で、N5・N4・ゲームを1か月まとめて利用できます。期間終了後は必要に応じて再購入してください。
             </div>
           </div>
         </div>
@@ -323,7 +315,7 @@ export default function PlansPage() {
           現在 <b>{allCount}</b> 教材
         </div>
         <div style={styles.secText}>
-          3/5/7プランでは、ここから選んで受講できます。
+          この再構築版では N5 / N4 の2教材に絞っています。
         </div>
       </section>
 
@@ -405,7 +397,7 @@ export default function PlansPage() {
       </section>
 
       <div style={styles.planGrid}>
-        {(["3", "5", "7"] as const).map((p) => {
+        {(["7"] as const).map((p) => {
           const isCurrent = p === currentPlan
           const isPending = p === pendingPlan
 
@@ -454,9 +446,7 @@ export default function PlansPage() {
               </div>
 
               <div style={styles.planMeta}>
-                {p === "3" && "利用可能：3教材（選択式）"}
-                {p === "5" && "利用可能：5教材（選択式）"}
-                {p === "7" && "利用可能：7教材（選択式）"}
+                {p === "7" && "利用可能：N5 / N4 / ゲーム すべて"}
               </div>
 
               <button
@@ -481,7 +471,7 @@ export default function PlansPage() {
         })}
       </div>
 
-      <section
+      {false ? <section
         style={{
           ...styles.card,
           marginTop: 16,
@@ -550,7 +540,7 @@ export default function PlansPage() {
               )} になります。`
             : ""}
         </div>
-      </section>
+      </section> : null}
 
       <section
         style={{

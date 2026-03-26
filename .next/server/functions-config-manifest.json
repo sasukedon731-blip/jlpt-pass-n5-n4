@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "functions": {
+    "/api/conversation/chat": {},
+    "/api/conversation/start": {},
+    "/api/speaking/evaluate": {},
+    "/api/speaking/tts": {},
+    "/api/stripe/checkout": {},
+    "/api/stripe/webhook": {}
+  }
+}

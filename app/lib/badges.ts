@@ -197,16 +197,41 @@ export function getPreviewBadgeMeta(ids: string[], limit = 6) {
   return defs.filter((b) => set.has(b.id)).slice(0, limit)
 }
 
-export function getRarityColors(rarity: BadgeRarity) {
+export function getRarityColors(rarity: BadgeRarity): {
+  bg: string
+  fg: string
+  border: string
+  glow: string
+} {
   switch (rarity) {
     case "legend":
-      return { bg: "#fff7ed", fg: "#9a3412", border: "#fdba74" }
+      return {
+        bg: "linear-gradient(135deg, #fef3c7 0%, #fff7ed 100%)",
+        fg: "#9a3412",
+        border: "#fdba74",
+        glow: "rgba(245, 158, 11, 0.28)",
+      }
     case "epic":
-      return { bg: "#faf5ff", fg: "#7e22ce", border: "#d8b4fe" }
+      return {
+        bg: "linear-gradient(135deg, #f3e8ff 0%, #faf5ff 100%)",
+        fg: "#7e22ce",
+        border: "#d8b4fe",
+        glow: "rgba(147, 51, 234, 0.24)",
+      }
     case "rare":
-      return { bg: "#eff6ff", fg: "#1d4ed8", border: "#93c5fd" }
+      return {
+        bg: "linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%)",
+        fg: "#1d4ed8",
+        border: "#93c5fd",
+        glow: "rgba(59, 130, 246, 0.22)",
+      }
     default:
-      return { bg: "#f8fafc", fg: "#334155", border: "#cbd5e1" }
+      return {
+        bg: "linear-gradient(135deg, #eef2f7 0%, #f8fafc 100%)",
+        fg: "#334155",
+        border: "#cbd5e1",
+        glow: "rgba(100, 116, 139, 0.18)",
+      }
   }
 }
 // =========================

@@ -1,0 +1,3 @@
+{
+  "/(auth)/mypage/conversation-history/page": "app/(auth)/mypage/conversation-history/page.js"
+}

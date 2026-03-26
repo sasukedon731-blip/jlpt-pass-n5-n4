@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/(auth)/layout,_N_T_/(auth)/quiz/layout,_N_T_/(auth)/quiz/page,_N_T_/quiz"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/!KGF1dGgp/quiz/__PAGE__",
+    "/!KGF1dGgp/quiz",
+    "/!KGF1dGgp",
+    "/_index",
+    "/_head"
+  ]
+}

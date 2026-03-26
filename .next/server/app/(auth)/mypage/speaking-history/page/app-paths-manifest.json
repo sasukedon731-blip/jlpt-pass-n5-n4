@@ -1,0 +1,3 @@
+{
+  "/(auth)/mypage/speaking-history/page": "app/(auth)/mypage/speaking-history/page.js"
+}

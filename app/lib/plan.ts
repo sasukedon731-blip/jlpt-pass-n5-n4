@@ -1,20 +1,17 @@
-import { quizzes } from "@/app/data/quizzes"
 import type { QuizType } from "@/app/data/types"
 
-export type PlanId = "trial" | "free" | "3" | "5" | "7"
+export type PlanId = "trial" | "free" | "7"
 export type SelectLimit = number
 
+export const JLPT_QUIZ_TYPES = ["japanese-n5", "japanese-n4"] as const satisfies readonly QuizType[]
+
 export function getSelectLimit(plan: PlanId): SelectLimit {
-  if (plan === "trial" || plan === "free") return 1
-  if (plan === "3") return 3
-  if (plan === "5") return 5
-  return 7
+  if (plan === "7") return 2
+  return 1
 }
 
-export function buildEntitledQuizTypes(plan: PlanId): QuizType[] {
-  const all = Object.keys(quizzes) as QuizType[]
-  if (plan === "trial" || plan === "free") return all.slice(0, 1)
-  return all
+export function buildEntitledQuizTypes(_plan: PlanId): QuizType[] {
+  return [...JLPT_QUIZ_TYPES]
 }
 
 export function normalizeSelectedForPlan(
@@ -22,23 +19,9 @@ export function normalizeSelectedForPlan(
   entitled: QuizType[],
   plan: PlanId
 ): QuizType[] {
-  const uniq = Array.from(new Set(selected)).filter((q) => entitled.includes(q))
-  const limit = getSelectLimit(plan)
-
-  if (limit <= 1) {
-    return entitled.length ? [entitled[0]] : []
-  }
-
-  const trimmed = uniq.slice(0, limit)
-
-  if (trimmed.length < limit) {
-    for (const q of entitled) {
-      if (trimmed.length >= limit) break
-      if (!trimmed.includes(q)) trimmed.push(q)
-    }
-  }
-
-  return trimmed
+  const uniq = Array.from(new Set(selected)).filter((q): q is QuizType => entitled.includes(q))
+  const limit = Math.min(getSelectLimit(plan), entitled.length)
+  return uniq.slice(0, limit)
 }
 
 export type BillingStatus = "pending" | "active" | "past_due" | "canceled"
@@ -67,7 +50,7 @@ export function isAccessActive(userDoc: any): boolean {
 
 export function getEffectivePlanId(userDoc: any): PlanId {
   const p = userDoc?.billing?.currentPlan ?? userDoc?.plan
-  return p === "trial" || p === "free" || p === "3" || p === "5" || p === "7"
+  return p === "trial" || p === "free" || p === "7"
     ? p
     : "trial"
 }

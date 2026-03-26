@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
-import type { QuizType } from "@/app/data/types"
+import { isJlptQuizType, type QuizType } from "@/app/data/types"
 import { quizzes } from "@/app/data/quizzes"
 
 type Props = {
@@ -27,8 +27,8 @@ function computeTimeLimit(mode: "normal" | "attack", level: number) {
 }
 
 export default function ChoiceBattleGame({ quizType, mode }: Props) {
-  const quiz = quizzes[quizType]
-  const questions = useMemo(() => quiz?.questions ?? [], [quizType])
+  const quiz = isJlptQuizType(quizType) ? quizzes[quizType] : undefined
+  const questions = useMemo(() => quiz?.questions ?? [], [quiz])
 
   const [phase, setPhase] = useState<Phase>("ready")
   const [idx, setIdx] = useState(0)

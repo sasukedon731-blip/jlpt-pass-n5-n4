@@ -9,7 +9,7 @@ import { AnimatePresence, motion, useAnimationControls } from "framer-motion"
 
 import { auth, db } from "@/app/lib/firebase"
 import { quizzes } from "@/app/data/quizzes"
-import type { QuizType } from "@/app/data/types"
+import type { JlptQuizType } from "@/app/data/types"
 import type { GameDifficulty, GameMode, GameQuestion } from "./types"
 import { fallbackQuestions } from "./questions"
 import { fetchAttackLeaderboard, submitAttackScore } from "./firestore"
@@ -27,10 +27,8 @@ function pickRandom<T>(arr: T[]): T {
 }
 
 function difficultyForAttack(level: number): GameDifficulty {
-  if (level <= 3) return "N4"
-  if (level <= 7) return "N3"
-  if (level <= 12) return "N2"
-  return "N1"
+  if (level <= 4) return "N5"
+  return "N4"
 }
 
 function secPerQuestion(mode: GameMode, level: number) {
@@ -52,7 +50,7 @@ export default function SpeedChoiceGame({
   quizType,
   modeParam,
 }: {
-  quizType: QuizType
+  quizType: JlptQuizType
   modeParam: string | null
 }) {
   const router = useRouter()
@@ -62,7 +60,7 @@ export default function SpeedChoiceGame({
 
   const [phase, setPhase] = useState<Phase>("ready")
   const [mode, setMode] = useState<GameMode>(modeParam === "attack" ? "attack" : "normal")
-  const [difficulty, setDifficulty] = useState<GameDifficulty>("N4")
+  const [difficulty, setDifficulty] = useState<GameDifficulty>(quizType === "japanese-n4" ? "N4" : "N5")
 
   const pool = useMemo(() => {
   const opts =
@@ -76,7 +74,7 @@ export default function SpeedChoiceGame({
         allowAutoTrimChoice: true,
       } as const)
     : ({
-        difficulty: "N3",
+        difficulty: "N5",
         maxPromptChars: 42,
         maxChoices: 4,
         minChoices: 4,
@@ -348,7 +346,7 @@ export default function SpeedChoiceGame({
         uid,
         displayName: displayName || "匿名",
         score,
-        bestLevel: "N4",
+        bestLevel: difficulty === "N4" ? "N4" : "N5",
         bestStage: 0,
       })
       setBestScore(res.bestScore)

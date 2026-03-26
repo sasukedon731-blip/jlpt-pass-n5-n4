@@ -1,5 +1,6 @@
 // app/components/QuizLayout.tsx
 import React from "react"
+import AppHeader from "@/app/components/AppHeader"
 
 export default function QuizLayout({
   title,
@@ -12,6 +13,7 @@ export default function QuizLayout({
 }) {
   return (
     <main className="container">
+      <AppHeader title={title} />
       <section className="card">
         <div className="card-header">
           <div className="stackSm">

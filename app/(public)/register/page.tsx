@@ -51,7 +51,7 @@ export default function RegisterPage() {
       const entitledQuizTypes = buildEntitledQuizTypes(plan)
 
       // ✅ selected も安全に正規化（基本は entitlement と同じでOK）
-      const selectedQuizTypes = normalizeSelectedForPlan([], entitledQuizTypes, plan)
+      const selectedQuizTypes = entitledQuizTypes
 
       await setDoc(doc(db, "users", uid), {
         email: userCredential.user.email ?? email,

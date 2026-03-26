@@ -1,0 +1,17 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/(auth)/layout,_N_T_/(auth)/mypage/layout,_N_T_/(auth)/mypage/conversation-history/layout,_N_T_/(auth)/mypage/conversation-history/page,_N_T_/mypage/conversation-history"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/!KGF1dGgp/mypage/conversation-history/__PAGE__",
+    "/!KGF1dGgp/mypage/conversation-history",
+    "/!KGF1dGgp/mypage",
+    "/!KGF1dGgp",
+    "/_index",
+    "/_head"
+  ]
+}

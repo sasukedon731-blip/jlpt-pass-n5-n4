@@ -4,9 +4,9 @@ import Link from "next/link"
 import { useMemo, useState } from "react"
 import { useParams, useRouter, useSearchParams } from "next/navigation"
 import styles from "./gameKind.module.css"
-import type { QuizType } from "@/app/data/types"
+import type { JlptQuizType } from "@/app/data/types"
 
-const levels: QuizType[] = ["japanese-n5", "japanese-n4"]
+const levels: JlptQuizType[] = ["japanese-n5", "japanese-n4"]
 
 type Mode = "normal" | "attack"
 
@@ -49,7 +49,7 @@ export default function GameKindClient() {
   const kind = typeof params?.kind === "string" ? params.kind : "tile-drop"
   const meta = META_BY_KIND[kind] ?? META_BY_KIND["tile-drop"]
 
-  const [quizType, setQuizType] = useState<QuizType>(rawType === "japanese-n5" ? "japanese-n5" : "japanese-n4")
+  const [quizType, setQuizType] = useState<JlptQuizType>(rawType === "japanese-n5" ? "japanese-n5" : "japanese-n4")
   const [mode, setMode] = useState<Mode>(rawMode === "attack" ? "attack" : "normal")
 
   const title = useMemo(() => (quizType === "japanese-n5" ? "N5" : "N4"), [quizType])

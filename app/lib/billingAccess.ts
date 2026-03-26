@@ -2,7 +2,7 @@
 
 export type BillingLike = Partial<{
   status: "pending" | "active" | "past_due" | "canceled"
-  currentPlan: "trial" | "free" | "3" | "5" | "7"
+  currentPlan: "trial" | "free" | "7"
   currentPeriodEnd: any
   aiConversationEnabled: boolean
   aiConversationExpiresAt: any
@@ -88,12 +88,8 @@ export function getBillingViewState(billing?: BillingLike | null) {
 
 export function getPlanLabel(plan?: string | null) {
   switch (plan) {
-    case "3":
-      return "3教材プラン"
-    case "5":
-      return "5教材プラン"
     case "7":
-      return "7教材プラン"
+      return "全機能プラン（1か月）"
     case "trial":
       return "トライアル"
     case "free":

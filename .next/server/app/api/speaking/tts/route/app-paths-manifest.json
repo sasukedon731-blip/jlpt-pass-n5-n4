@@ -1,0 +1,3 @@
+{
+  "/api/speaking/tts/route": "app/api/speaking/tts/route.js"
+}

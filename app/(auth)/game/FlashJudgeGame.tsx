@@ -7,12 +7,12 @@ import { auth } from "@/app/lib/firebase"
 import { fetchAttackLeaderboard, fetchMyAttackRank, submitAttackScore } from "./firestore"
 import GameEndActions from "./ui/GameEndActions"
 
-import type { QuizType } from "@/app/data/types"
+import type { JlptQuizType, QuizType } from "@/app/data/types"
 import type { FlashJudgeQuestion, GameMode } from "./types"
 import { getFlashJudgePool } from "./pools/flashJudgePools"
 import { addJlptBattleXp, comboMultiplier } from "./battleProgress"
 
-const ATTACK_LEVELS: QuizType[] = ["japanese-n5", "japanese-n4"]
+const ATTACK_LEVELS: JlptQuizType[] = ["japanese-n5", "japanese-n4"]
 
 function levelLabel(i: number): "N5" | "N4" {
   return i === 1 ? "N4" : "N5"
@@ -119,8 +119,7 @@ export default function FlashJudgeGame({
           uid,
           displayName: displayName || "匿名",
           score,
-          bestLevel:
-            maxLevelReached === 2 ? "N2" : maxLevelReached === 1 ? "N3" : "N4",
+          bestLevel: maxLevelReached >= 1 ? "N4" : "N5",
           bestStage: bestStageAtMax,
         })
       } catch (e: any) {
@@ -200,7 +199,7 @@ export default function FlashJudgeGame({
           )
           if (next >= 30) {
             setAttackLevelIndex((i) => {
-              const ni = (i + 1) % 3
+              const ni = (i + 1) % ATTACK_LEVELS.length
               setMaxLevelReached((m) => Math.max(m, ni))
               return ni
             })

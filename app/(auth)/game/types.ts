@@ -1,6 +1,12 @@
 // app/(auth)/game/types.ts
+import type { QuizType } from "@/app/data/types"
+
 export type GameMode = "normal" | "attack"
 
+/**
+ * 旧問題資産との互換のため N3/N2/N1 も残す。
+ * ただし現行導線の主戦場は N5 / N4。
+ */
 export type GameDifficulty = "N5" | "N4" | "N3" | "N2" | "N1"
 
 export type GameKind =
@@ -16,21 +22,15 @@ export type GameQuestion = {
   id: string
   kind: GameKind
   type: GameQuestionType
-
   prompt: string
   answer: string[]
   choices: string[]
-
   difficulty: GameDifficulty
   enabled: boolean
-
-  quizType?: string
-
-  // ✅ N4のカテゴリ絞り込みに使う（moji-goi / bunpo / reading / listening）
+  quizType?: QuizType
   sectionId?: string
 }
 
-// ===== flash-judge =====
 export type FlashJudgeQuestion = {
   id: string
   kind: "flash-judge"
@@ -39,11 +39,10 @@ export type FlashJudgeQuestion = {
   explanation?: string
   difficulty: GameDifficulty
   enabled: boolean
-  quizType?: string
+  quizType?: QuizType
   sectionId?: string
 }
 
-// ===== memory-burst =====
 export type MemoryBurstQuestion = {
   id: string
   kind: "memory-burst"
@@ -54,15 +53,17 @@ export type MemoryBurstQuestion = {
   explanation?: string
   difficulty: GameDifficulty
   enabled: boolean
-  quizType?: string
+  quizType?: QuizType
   sectionId?: string
 }
-// ✅ Attackランキング用（firestore.ts が参照）
+
+export type LeaderboardBestLevel = "N5" | "N4" | "N3" | "N2" | "N1"
+
 export type LeaderboardEntry = {
   uid: string
   displayName: string
   bestScore: number
-  bestLevel?: "N4" | "N3" | "N2"
+  bestLevel?: LeaderboardBestLevel
   bestStage?: number
-  updatedAt?: any
+  updatedAt?: unknown
 }

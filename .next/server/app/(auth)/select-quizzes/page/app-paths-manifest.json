@@ -1,0 +1,3 @@
+{
+  "/(auth)/select-quizzes/page": "app/(auth)/select-quizzes/page.js"
+}

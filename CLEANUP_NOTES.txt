@@ -1,0 +1,13 @@
+この軽量版で実施したこと
+- .git を削除
+- node_modules を削除（必要なら npm install）
+- .env.local を除外
+- N4 / N5 以外の quiz データを削除
+- N2 / N3 / 製造 / 介護 / 方言などの音声を削除
+- 料金を 300円 / 30日に調整
+- QuizLayout に AppHeader を追加して、マイページ動線を復活
+- テスト用に devUnlockAll 相当を常時ONにして、N4 / N5 を常に確認できる状態へ調整
+
+注意
+- 本番化するときは app/lib/userPlanState.ts と app/lib/guards.ts の TEST_ALWAYS_UNLOCK_ALL を false に戻してください。
+- node_modules は入れていないので、ローカルで npm install が必要です。

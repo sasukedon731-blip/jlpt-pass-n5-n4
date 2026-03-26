@@ -1,0 +1,3 @@
+{
+  "/api/speaking/transcribe/route": "app/api/speaking/transcribe/route.js"
+}

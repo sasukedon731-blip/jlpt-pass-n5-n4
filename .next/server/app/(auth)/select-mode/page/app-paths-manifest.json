@@ -1,0 +1,3 @@
+{
+  "/(auth)/select-mode/page": "app/(auth)/select-mode/page.js"
+}

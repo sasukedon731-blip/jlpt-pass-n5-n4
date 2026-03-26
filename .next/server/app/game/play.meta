@@ -1,0 +1,17 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/(auth)/layout,_N_T_/(auth)/game/layout,_N_T_/(auth)/game/play/layout,_N_T_/(auth)/game/play/page,_N_T_/game/play"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/!KGF1dGgp/game/play/__PAGE__",
+    "/!KGF1dGgp/game/play",
+    "/!KGF1dGgp/game",
+    "/!KGF1dGgp",
+    "/_index",
+    "/_head"
+  ]
+}

@@ -41,7 +41,7 @@ type Progress = {
 
 type BillingData = Partial<{
   status: "pending" | "active" | "past_due" | "canceled"
-  currentPlan: "trial" | "free" | "3" | "5" | "7"
+  currentPlan: "trial" | "free" | "7"
   currentPeriodEnd: any
   aiConversationEnabled: boolean
   aiConversationExpiresAt: any

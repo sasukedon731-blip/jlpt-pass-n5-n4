@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/(auth)/layout,_N_T_/(auth)/plans/layout,_N_T_/(auth)/plans/page,_N_T_/plans"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/!KGF1dGgp/plans/__PAGE__",
+    "/!KGF1dGgp/plans",
+    "/!KGF1dGgp",
+    "/_index",
+    "/_head"
+  ]
+}

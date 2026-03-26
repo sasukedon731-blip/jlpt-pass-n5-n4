@@ -1,5 +1,7 @@
 // app/data/quizCatalog.ts
 
+import type { JlptQuizType } from "./types"
+
 export type QuizMode = "normal" | "exam" | "review"
 
 export type QuizSectionDef = {
@@ -11,7 +13,7 @@ export type QuizSectionDef = {
 }
 
 export type QuizDef = {
-  id: string
+  id: JlptQuizType
   title: string
   description?: string
   enabled: boolean
@@ -20,16 +22,11 @@ export type QuizDef = {
   sections: QuizSectionDef[]
 }
 
-/**
- * JLPT N5 / N4 特化版カタログ
- * - 業種概念は撤去
- * - N3 / N2 は別アプリへ切り離し
- */
 export const quizCatalog: QuizDef[] = [
   {
     id: "japanese-n5",
     title: "日本語検定 N5",
-    description: "ひらがな・カタカナ・基本語彙・やさしい文法・読解・聴解の箱を先に用意したN5専用教材。",
+    description: "ひらがな・カタカナ・基本語彙・やさしい文法・読解・聴解のN5専用教材。",
     enabled: true,
     order: 1,
     modes: ["normal", "exam", "review"],
@@ -44,7 +41,7 @@ export const quizCatalog: QuizDef[] = [
   {
     id: "japanese-n4",
     title: "日本語検定 N4",
-    description: "N4合格を目指すための文法・語彙・読解・聴解教材。既存資産をそのまま活用。",
+    description: "N4合格を目指すための語彙・文法・読解・聴解教材。",
     enabled: true,
     order: 2,
     modes: ["normal", "exam", "review"],
@@ -57,8 +54,7 @@ export const quizCatalog: QuizDef[] = [
     ],
   },
 ]
-// 仮の互換関数（旧コード対応）
+
 export function getQuizDef(quizType: string) {
-  const found = quizCatalog.find((q) => q.id === quizType)
-  return found ?? null
+  return quizCatalog.find((q) => q.id === quizType) ?? null
 }

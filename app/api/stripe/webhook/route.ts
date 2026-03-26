@@ -6,7 +6,7 @@ import { setUserBillingMerge, setUserIndustryMerge } from "@/app/lib/billingServ
 
 export const runtime = "nodejs"
 
-type PlanId = "3" | "5" | "7"
+type PlanId = "7"
 type PaymentMethodType = "convenience" | "card"
 type IndustryId =
   | "construction"
@@ -23,7 +23,7 @@ function parseDurationDays(v: unknown): 30 | 180 | 365 {
 }
 
 function parsePlan(v: unknown): PlanId | null {
-  return v === "3" || v === "5" || v === "7" ? v : null
+  return v === "7" || v === "3" || v === "5" ? "7" : null
 }
 
 function parseAiConversation(v: unknown): boolean {

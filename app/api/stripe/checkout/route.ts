@@ -15,34 +15,23 @@ type IndustryId =
 
 type Body = {
   idToken: string
-  plan: "3" | "5" | "7"
+  plan: "7"
   method: "convenience" | "card"
   durationDays: 30 | 180 | 365
   industry?: IndustryId | null
   addAiConversation?: boolean
 }
 
-// ✅ 30日=500円（3教材プラン）に合わせた価格テーブル
+// ✅ 30日=300円の全機能プラン価格テーブル
 // - 半年：10%OFF
 // - 年：20%OFF
 const PRICE_TABLE: Record<Body["plan"], Record<30 | 180 | 365, number>> = {
-  "3": {
-    30: 500,
-    180: Math.round(500 * 6 * 0.9),
-    365: Math.round(500 * 12 * 0.8),
-  },
-  "5": {
-    30: 800,
-    180: Math.round(800 * 6 * 0.9),
-    365: Math.round(800 * 12 * 0.8),
-  },
   "7": {
-    30: 1000,
-    180: Math.round(1000 * 6 * 0.9),
-    365: Math.round(1000 * 12 * 0.8),
+    30: 300,
+    180: Math.round(300 * 6 * 0.9),
+    365: Math.round(300 * 12 * 0.8),
   },
 }
-
 
 const PRICE_TABLE_ADDON: Record<30 | 180 | 365, number> = {
   30: 500,
@@ -71,7 +60,7 @@ export async function POST(req: Request) {
     if (!body?.idToken || !body?.plan || !body?.method) {
       return NextResponse.json({ error: "Bad request" }, { status: 400 })
     }
-    if (body.plan !== "3" && body.plan !== "5" && body.plan !== "7") {
+    if (body.plan !== "7") {
       return NextResponse.json({ error: "Bad plan" }, { status: 400 })
     }
     if (body.method !== "convenience" && body.method !== "card") {
@@ -100,12 +89,7 @@ if (!appUrl) {
   throw new Error("Missing NEXT_PUBLIC_APP_URL")
 }
 
-    const planName =
-      body.plan === "3"
-        ? "3教材プラン"
-        : body.plan === "5"
-        ? "5教材プラン"
-        : "7教材プラン"
+    const planName = "全機能プラン"
 
     // ✅ Create Checkout Session (one-time payment)
     // Konbini is async: webhook flips pending -> active.

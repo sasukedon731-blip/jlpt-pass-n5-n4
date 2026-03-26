@@ -5,7 +5,7 @@ import type { QuizType } from "@/app/data/types"
 
 export type BillingStatus = "pending" | "active" | "past_due" | "canceled"
 export type BillingMethod = "convenience" | "card"
-export type PlanId = "trial" | "free" | "3" | "5" | "7"
+export type PlanId = "trial" | "free" | "7"
 
 export type BillingPatch = Partial<{
   accountType: "personal" | "company"
@@ -34,7 +34,7 @@ type UserDoc = {
 }
 
 function isPlanId(v: any): v is PlanId {
-  return v === "trial" || v === "free" || v === "3" || v === "5" || v === "7"
+  return v === "trial" || v === "free" || v === "7"
 }
 
 function nextMonthDate(from = new Date()) {
@@ -162,7 +162,7 @@ export async function setUserBillingMerge(uid: string, patch: BillingPatch) {
   if (
     becomingActive &&
     isPlanId(nextPlan) &&
-    (nextPlan === "3" || nextPlan === "5" || nextPlan === "7")
+    nextPlan === "7"
   ) {
     const entitled = buildEntitledQuizTypes(nextPlan)
 

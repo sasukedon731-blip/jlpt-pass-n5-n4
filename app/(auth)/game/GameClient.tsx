@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 
-import type { QuizType } from "@/app/data/types"
+import { isJlptQuizType, type JlptQuizType, type QuizType } from "@/app/data/types"
 import { quizzes } from "@/app/data/quizzes"
 import TileDropGame from "./TileDropGame"
 import SpeedChoiceGame from "./SpeedChoiceGame"
@@ -21,9 +21,8 @@ import { enqueueAchievementToasts } from "@/app/lib/achievementToastQueue"
 import { getBadgeMeta } from "@/app/lib/badges"
 import type { PlanId } from "@/app/lib/plan"
 
-function isQuizType(v: any): v is QuizType {
-  if (typeof v !== "string") return false
-  return v in quizzes
+function isQuizType(v: any): v is JlptQuizType {
+  return isJlptQuizType(v)
 }
 
 function isGameKind(v: any): v is GameKind {
@@ -122,7 +121,7 @@ function UserBlocked({ onGoPlans, onGoHome }: { onGoPlans: () => void; onGoHome:
 }
 
 function isPaidPlan(plan: PlanId) {
-  return plan === "3" || plan === "5" || plan === "7"
+  return plan === "7"
 }
 
 export default function GameClient() {
@@ -134,7 +133,7 @@ export default function GameClient() {
   const rawMode = params.get("mode")
   const rawKind = params.get("kind")
 
-  const quizType: QuizType = useMemo(() => {
+  const quizType: JlptQuizType = useMemo(() => {
     return isQuizType(rawType) ? rawType : "japanese-n4"
   }, [rawType])
 

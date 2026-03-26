@@ -9,7 +9,7 @@ import { AnimatePresence, motion, useAnimationControls } from "framer-motion"
 
 import { auth, db } from "@/app/lib/firebase"
 import { quizzes } from "@/app/data/quizzes"
-import type { QuizType } from "@/app/data/types"
+import type { JlptQuizType, QuizType } from "@/app/data/types"
 import type { GameDifficulty, GameMode, GameQuestion } from "./types"
 import { fallbackQuestions } from "./questions"
 import { fetchAttackLeaderboard, fetchMyAttackRank, submitAttackScore } from "./firestore"
@@ -58,7 +58,7 @@ const GAME_DESC: Record<"tile-drop" | "flash-judge" | "memory-burst", string> = 
   "memory-burst": "一瞬表示→消えたあとに答える。記憶力バトル。",
 }
 
-function difficultyLabelFromQuizType(qt: string): "N4" | "N3" | "N2" | "N5" {
+function difficultyLabelFromQuizType(qt: string): "N5" | "N4" {
   if (qt === "japanese-n4") return "N4"
   if (qt === "japanese-n5") return "N5"
   return "N5"
@@ -69,11 +69,8 @@ function pickOne<T>(arr: T[]): T {
 }
 
 function difficultyForAttack(level: number): GameDifficulty {
-  if (level <= 3) return "N5"
-  if (level <= 6) return "N4"
-  if (level <= 9) return "N3"
-  if (level <= 12) return "N2"
-  return "N1"
+  if (level <= 4) return "N5"
+  return "N4"
 }
 
 function speedFor(mode: GameMode, level: number) {
@@ -117,7 +114,7 @@ const [plateMountKey, setPlateMountKey] = useState(0)
   const [mode, setMode] = useState<GameMode>(modeParam === "attack" ? "attack" : "normal")
 
   // ✅ Attack: N4→N3→N2→N4（30問正解で昇格）
-  const attackLevels: QuizType[] = ["japanese-n5", "japanese-n4"]
+  const attackLevels: JlptQuizType[] = ["japanese-n5", "japanese-n4"]
   const [attackLevelIndex, setAttackLevelIndex] = useState(0)
   const [stageCorrect, setStageCorrect] = useState(0)
   const [maxLevelReached, setMaxLevelReached] = useState(0)
@@ -473,7 +470,7 @@ function startGame() {
         uid,
         displayName: displayName || "匿名",
         score,
-        bestLevel: (maxLevelReached === 2 ? "N2" : maxLevelReached === 1 ? "N3" : "N4"),
+        bestLevel: maxLevelReached >= 1 ? "N4" : "N5",
         bestStage: bestStageAtMax,
       })
       setBestScore(res.bestScore)
@@ -802,7 +799,7 @@ function startGame() {
                     レベル
                   </div>
                   <div className="mobileRow3" style={{ marginTop: 8 }}>
-                    {(["japanese-n5", "japanese-n4"] as QuizType[]).map((lv) => (
+                    {(["japanese-n5", "japanese-n4"] as JlptQuizType[]).map((lv) => (
                       <button
                         key={lv}
                         type="button"
@@ -915,10 +912,10 @@ function startGame() {
                 {mode === "normal" && qt.startsWith("japanese-") ? (
                   <div style={{ marginTop: 10 }}>
                     <div style={{ fontSize: 12, opacity: 0.8, marginBottom: 6 }}>
-                      ノーマルの級（N4 / N3 / N2）
+                      ノーマルの級（N5 / N4）
                     </div>
                     <div style={styles.seg} className="levelSeg">
-                      {(["japanese-n5", "japanese-n4"] as QuizType[]).map((lv) => (
+                      {(["japanese-n5", "japanese-n4"] as JlptQuizType[]).map((lv) => (
                         <button
                           key={lv}
                           style={{ ...styles.segBtn, ...(qt === lv ? styles.segActive : {}) }}

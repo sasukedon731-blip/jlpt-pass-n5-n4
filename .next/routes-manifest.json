@@ -1,0 +1,303 @@
+{
+  "version": 3,
+  "pages404": true,
+  "appType": "app",
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/admin/[uid]",
+      "regex": "^/admin/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPuid": "nxtPuid"
+      },
+      "namedRegex": "^/admin/(?<nxtPuid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/contents/[quizType]",
+      "regex": "^/contents/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPquizType": "nxtPquizType"
+      },
+      "namedRegex": "^/contents/(?<nxtPquizType>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/game/[kind]",
+      "regex": "^/game/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPkind": "nxtPkind"
+      },
+      "namedRegex": "^/game/(?<nxtPkind>[^/]+?)(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/admin",
+      "regex": "^/admin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin(?:/)?$"
+    },
+    {
+      "page": "/api/conversation/chat",
+      "regex": "^/api/conversation/chat(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/conversation/chat(?:/)?$"
+    },
+    {
+      "page": "/api/conversation/start",
+      "regex": "^/api/conversation/start(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/conversation/start(?:/)?$"
+    },
+    {
+      "page": "/api/debug",
+      "regex": "^/api/debug(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/debug(?:/)?$"
+    },
+    {
+      "page": "/api/speaking/evaluate",
+      "regex": "^/api/speaking/evaluate(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/speaking/evaluate(?:/)?$"
+    },
+    {
+      "page": "/api/speaking/generate",
+      "regex": "^/api/speaking/generate(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/speaking/generate(?:/)?$"
+    },
+    {
+      "page": "/api/speaking/transcribe",
+      "regex": "^/api/speaking/transcribe(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/speaking/transcribe(?:/)?$"
+    },
+    {
+      "page": "/api/speaking/tts",
+      "regex": "^/api/speaking/tts(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/speaking/tts(?:/)?$"
+    },
+    {
+      "page": "/api/stripe/checkout",
+      "regex": "^/api/stripe/checkout(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/stripe/checkout(?:/)?$"
+    },
+    {
+      "page": "/api/stripe/webhook",
+      "regex": "^/api/stripe/webhook(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/stripe/webhook(?:/)?$"
+    },
+    {
+      "page": "/cancel",
+      "regex": "^/cancel(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/cancel(?:/)?$"
+    },
+    {
+      "page": "/contents",
+      "regex": "^/contents(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/contents(?:/)?$"
+    },
+    {
+      "page": "/conversation",
+      "regex": "^/conversation(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/conversation(?:/)?$"
+    },
+    {
+      "page": "/exam",
+      "regex": "^/exam(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/exam(?:/)?$"
+    },
+    {
+      "page": "/favicon.ico",
+      "regex": "^/favicon\\.ico(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/favicon\\.ico(?:/)?$"
+    },
+    {
+      "page": "/game",
+      "regex": "^/game(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/game(?:/)?$"
+    },
+    {
+      "page": "/game/play",
+      "regex": "^/game/play(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/game/play(?:/)?$"
+    },
+    {
+      "page": "/how-to-use",
+      "regex": "^/how\\-to\\-use(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/how\\-to\\-use(?:/)?$"
+    },
+    {
+      "page": "/legal/privacy",
+      "regex": "^/legal/privacy(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/legal/privacy(?:/)?$"
+    },
+    {
+      "page": "/legal/refund",
+      "regex": "^/legal/refund(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/legal/refund(?:/)?$"
+    },
+    {
+      "page": "/legal/terms",
+      "regex": "^/legal/terms(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/legal/terms(?:/)?$"
+    },
+    {
+      "page": "/legal/tokushoho",
+      "regex": "^/legal/tokushoho(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/legal/tokushoho(?:/)?$"
+    },
+    {
+      "page": "/login",
+      "regex": "^/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/login(?:/)?$"
+    },
+    {
+      "page": "/mypage",
+      "regex": "^/mypage(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/mypage(?:/)?$"
+    },
+    {
+      "page": "/mypage/achievements",
+      "regex": "^/mypage/achievements(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/mypage/achievements(?:/)?$"
+    },
+    {
+      "page": "/mypage/conversation-history",
+      "regex": "^/mypage/conversation\\-history(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/mypage/conversation\\-history(?:/)?$"
+    },
+    {
+      "page": "/mypage/speaking-history",
+      "regex": "^/mypage/speaking\\-history(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/mypage/speaking\\-history(?:/)?$"
+    },
+    {
+      "page": "/normal",
+      "regex": "^/normal(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/normal(?:/)?$"
+    },
+    {
+      "page": "/plans",
+      "regex": "^/plans(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/plans(?:/)?$"
+    },
+    {
+      "page": "/quiz",
+      "regex": "^/quiz(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/quiz(?:/)?$"
+    },
+    {
+      "page": "/register",
+      "regex": "^/register(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/register(?:/)?$"
+    },
+    {
+      "page": "/review",
+      "regex": "^/review(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/review(?:/)?$"
+    },
+    {
+      "page": "/select-industry",
+      "regex": "^/select\\-industry(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/select\\-industry(?:/)?$"
+    },
+    {
+      "page": "/select-mode",
+      "regex": "^/select\\-mode(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/select\\-mode(?:/)?$"
+    },
+    {
+      "page": "/select-quizzes",
+      "regex": "^/select\\-quizzes(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/select\\-quizzes(?:/)?$"
+    },
+    {
+      "page": "/speaking",
+      "regex": "^/speaking(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/speaking(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": false,
+    "dynamicRSCPrerender": false
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}

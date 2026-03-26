@@ -4,14 +4,14 @@ import { useEffect, useMemo, useState } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import ReviewClient from "./ReviewClient"
 import { quizzes } from "@/app/data/quizzes"
-import type { QuizType } from "@/app/data/types"
+import { isJlptQuizType, type QuizType } from "@/app/data/types"
 import { useAuth } from "@/app/lib/useAuth"
 import { loadAndRepairUserPlanState } from "@/app/lib/userPlanState"
 import { assertActiveAccess } from "@/app/lib/guards"
 import LockedFeature from "@/app/components/LockedFeature"
 
 function isQuizType(v: string): v is QuizType {
-  return (quizzes as any)[v] != null
+  return isJlptQuizType(v)
 }
 
 export default function ReviewClientWrapper() {
@@ -29,6 +29,7 @@ export default function ReviewClientWrapper() {
 
   const quiz = useMemo(() => {
     if (!quizType) return null
+    if (!isJlptQuizType(quizType)) return null
     return quizzes[quizType]
   }, [quizType])
 

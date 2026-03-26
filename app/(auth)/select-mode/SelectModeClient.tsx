@@ -11,7 +11,7 @@ function getMeta(type: string) {
       title: "日本語検定 N5",
       badge: "N5",
       color: "#0f766e",
-      note: "N5はプレースホルダー問題入り。あとから本番問題を追加しやすい構成です。",
+      note: "N5専用の学習・模擬・復習・ゲームへ進めます。",
     }
   }
   return {

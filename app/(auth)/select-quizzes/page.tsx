@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { onAuthStateChanged } from "firebase/auth"
 
 import { auth } from "@/app/lib/firebase"
@@ -26,89 +26,10 @@ function formatDate(d: Date) {
   return `${y}/${m}/${day}`
 }
 
-type IndustryId = "construction" | "manufacturing" | "care" | "driver" | "undecided"
-
-const INDUSTRY_LABEL: Record<IndustryId, string> = {
-  construction: "建設",
-  manufacturing: "製造",
-  care: "介護",
-  driver: "運転・免許",
-  undecided: "未定（海外から）",
-}
-
-function isIndustryId(v: any): v is IndustryId {
-  return (
-    v === "construction" ||
-    v === "manufacturing" ||
-    v === "care" ||
-    v === "driver" ||
-    v === "undecided"
-  )
-}
-
-const JAPANESE_BASE_IDS: QuizType[] = [
-  "japanese-n4",
-  "japanese-n3",
-  "japanese-n2",
-  "speaking-practice",
-]
-
-const INDUSTRY_EXTRA: Record<IndustryId, QuizType[]> = {
-  construction: [
-    "genba-listening",
-    "genba-phrasebook",
-    "kenchiku-sekou-2kyu-1ji",
-    "doboku-sekou-2kyu-1ji",
-    "denki-sekou-2kyu-1ji",
-    "kanko-sekou-2kyu-1ji",
-    "gaikoku-license",
-    "kansai-listening",
-    "dialect-meaning",
-  ],
-  manufacturing: ["genba-listening", "genba-phrasebook", "kansai-listening", "dialect-meaning"],
-  care: [],
-  driver: ["gaikoku-license"],
-  undecided: ["kansai-listening", "dialect-meaning"],
-}
-
-function buildIndustryAllowed(industry: IndustryId | null): QuizType[] {
-  if (!industry) return []
-  const extra = INDUSTRY_EXTRA[industry] ?? []
-  return Array.from(new Set<QuizType>([...JAPANESE_BASE_IDS, ...extra]))
-}
+const JLPT_IDS: QuizType[] = ["japanese-n5", "japanese-n4"]
 
 export default function SelectQuizzesPage() {
   const router = useRouter()
-  const params = useSearchParams()
-
-  const LS_INDUSTRY_KEY = "selected-industry"
-
-  const industryParam = (params.get("industry") as IndustryId | null) ?? null
-  const [industryReady, setIndustryReady] = useState(false)
-
-  // ✅ URLに無ければ localStorage から復元してURLを正にする
-  useEffect(() => {
-    if (industryParam && isIndustryId(industryParam)) {
-      try {
-        localStorage.setItem(LS_INDUSTRY_KEY, industryParam)
-      } catch {}
-      setIndustryReady(true)
-      return
-    }
-
-    try {
-      const saved = localStorage.getItem(LS_INDUSTRY_KEY)
-      if (saved && isIndustryId(saved)) {
-        router.replace(`/select-quizzes?industry=${encodeURIComponent(saved)}`)
-        return
-      }
-    } catch {}
-
-    setIndustryReady(true)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const [showAll, setShowAll] = useState(false)
 
   const [uid, setUid] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -116,8 +37,8 @@ export default function SelectQuizzesPage() {
   const [error, setError] = useState("")
 
   const [plan, setPlan] = useState<PlanId>("trial")
-  const [entitled, setEntitled] = useState<QuizType[]>([])
   const [selected, setSelected] = useState<QuizType[]>([])
+  const [entitled, setEntitled] = useState<QuizType[]>(JLPT_IDS)
   const [nextAllowedAt, setNextAllowedAt] = useState<Date | null>(null)
   const [devUnlockAll, setDevUnlockAll] = useState(false)
 
@@ -140,10 +61,12 @@ export default function SelectQuizzesPage() {
       try {
         const state = await loadAndRepairUserPlanState(uid)
         setPlan(state.plan)
-        setEntitled(state.entitledQuizTypes)
         setSelected(state.selectedQuizTypes)
+        setEntitled(
+          state.entitledQuizTypes.filter((id) => JLPT_IDS.includes(id)) as QuizType[]
+        )
         setNextAllowedAt(state.nextChangeAllowedAt)
-        setDevUnlockAll((state as any)?.devUnlockAll === true)
+        setDevUnlockAll(state.devUnlockAll === true)
       } catch (e) {
         console.error(e)
         setError("読み込みに失敗しました")
@@ -155,87 +78,48 @@ export default function SelectQuizzesPage() {
 
   const now = new Date()
   const changeOk = devUnlockAll ? true : canChange(now, nextAllowedAt)
-
-  const limit = useMemo(() => (devUnlockAll ? "ALL" : getSelectLimit(plan)), [plan, devUnlockAll])
-  const maxCount = limit === "ALL" ? entitled.length : limit
-
-  const requiredCount = useMemo(() => {
-    if (plan === "3") return 3
-    if (plan === "5") return 5
-    if (plan === "7") return 7
-    return 1
-  }, [plan, entitled.length])
-
-  const editable = changeOk || selected.length < requiredCount
-
-  const remaining = useMemo(() => {
-    if (limit === "ALL") return "∞"
-    return Math.max(0, maxCount - selected.length)
-  }, [limit, maxCount, selected.length])
-
-  const industryAllowed = useMemo(
-    () => buildIndustryAllowed(industryParam && isIndustryId(industryParam) ? industryParam : null),
-    [industryParam]
-  )
+  const limit = useMemo(() => (devUnlockAll ? entitled.length : getSelectLimit(plan)), [devUnlockAll, entitled.length, plan])
+  const maxCount = Math.min(limit, entitled.length)
+  const editable = changeOk || selected.length === 0
+  const remaining = Math.max(0, maxCount - selected.length)
 
   const entitledList = useMemo(() => {
-    const base = entitled.filter((id) => (quizzes as any)[id] != null)
-
-    const filtered =
-      !industryParam || showAll
-        ? base
-        : base.filter((id) => industryAllowed.includes(id) || selected.includes(id))
-
-    return filtered.map((id) => {
-      const q = (quizzes as any)[id]
-      return {
+    const ids = entitled.length > 0 ? entitled : JLPT_IDS
+    return ids
+      .filter((id) => id in quizzes)
+      .map((id) => ({
         id,
-        title: q.title as string,
-        description: (q.description as string | undefined) ?? "",
-      }
-    })
-  }, [entitled, industryParam, showAll, industryAllowed, selected])
+        title: quizzes[id as keyof typeof quizzes].title,
+        description: quizzes[id as keyof typeof quizzes].description ?? "",
+      }))
+  }, [entitled])
 
-  const toggle = (q: QuizType) => {
+  const toggle = (quizType: QuizType) => {
     if (!editable) return
-
     setSelected((prev) => {
-      const has = prev.includes(q)
-      if (has) return prev.filter((x) => x !== q)
-      if (limit !== "ALL" && prev.length >= maxCount) return prev
-      return [...prev, q]
+      if (prev.includes(quizType)) return prev.filter((id) => id !== quizType)
+      if (prev.length >= maxCount) return [...prev.slice(1), quizType]
+      return [...prev, quizType]
     })
   }
 
   const handleSave = async () => {
     if (!uid) return
+    if (selected.length === 0) {
+      setError("N5 か N4 を1つ以上選んでください")
+      return
+    }
     setSaving(true)
     setError("")
     try {
-      if (!devUnlockAll) {
-        await saveSelectedQuizTypesWithLock({
-          uid,
-          selectedQuizTypes: selected,
-        })
-      }
-      if (industryParam) router.replace(`/select-mode?industry=${industryParam}`)
-      else router.replace("/select-mode")
+      await saveSelectedQuizTypesWithLock({ uid, selectedQuizTypes: selected })
+      router.replace("/select-mode")
     } catch (e) {
       console.error(e)
       setError("保存に失敗しました")
     } finally {
       setSaving(false)
     }
-  }
-
-  if (!industryReady) {
-    return (
-      <main style={styles.page}>
-        <div style={styles.shell}>
-          <div style={styles.card}>読み込み中...</div>
-        </div>
-      </main>
-    )
   }
 
   if (loading) {
@@ -253,55 +137,29 @@ export default function SelectQuizzesPage() {
       <div style={styles.shell}>
         <AppHeader title="教材を選択" />
 
-        {industryParam && isIndustryId(industryParam) ? (
-          <section style={styles.industryBar}>
-            <div>
-              <div style={{ fontWeight: 900, fontSize: 13 }}>
-                業種：{INDUSTRY_LABEL[industryParam]}（日本語基礎は必ず含まれます）
-              </div>
-              <div style={{ fontSize: 12, opacity: 0.75, marginTop: 4, lineHeight: 1.5 }}>
-                ※ 表示は業種で絞っています。選択済みの教材は業種外でも見えるようにしています。
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setShowAll((v) => !v)}
-              style={{
-                ...styles.filterBtn,
-                ...(showAll ? styles.filterBtnOn : styles.filterBtnOff),
-              }}
-            >
-              {showAll ? "業種で絞る" : "すべて表示"}
-            </button>
-          </section>
-        ) : null}
-
         <section style={styles.summaryCard}>
           <div style={{ fontWeight: 900 }}>
-            プラン：{plan} ・ 選択上限：{limit === "ALL" ? "ALL" : `${limit}つ`} ・ 選択中：{selected.length} ・ 残り：{remaining}
+            プラン：{plan} ・ 選択上限：{maxCount} ・ 選択中：{selected.length} ・ 残り：{remaining}
           </div>
           <div style={{ marginTop: 6, fontSize: 12, opacity: 0.75 }}>
-            保存後は一定期間ロックされます（初回確定までは例外）。
+            JLPT専用版なので、教材は N5 / N4 のみです。
           </div>
         </section>
 
         <section style={styles.infoCard}>
-          {!changeOk && nextAllowedAt && selected.length >= requiredCount ? (
+          {!changeOk && nextAllowedAt && selected.length > 0 ? (
             <div style={{ ...styles.notice, ...styles.noticeWarn }}>
               変更ロック中：次に変更できる日 <b>{formatDate(nextAllowedAt)}</b>
             </div>
           ) : null}
 
-          {!changeOk && selected.length < requiredCount ? (
+          {!changeOk && selected.length === 0 ? (
             <div style={{ ...styles.notice, ...styles.noticeOk }}>
-              ※ 初回の教材確定がまだなので、今だけ編集できます（保存後に1ヶ月ロック）
+              初回の教材確定前なので、今だけ選択できます。
             </div>
           ) : null}
 
-          <div style={styles.mini}>
-            推奨：{plan === "3" ? "3つ" : plan === "5" ? "5つ" : plan === "7" ? "7つ" : "1つ"} 選ぶ
-          </div>
+          <div style={styles.mini}>推奨：まずは N5 か N4 を選んで進む</div>
         </section>
 
         {error ? <div style={styles.alert}>{error}</div> : null}
@@ -309,14 +167,13 @@ export default function SelectQuizzesPage() {
         <section style={{ marginTop: 12 }}>
           <div style={styles.grid}>
             {entitledList.map((q) => {
-              const checked = selected.includes(q.id as QuizType)
-              const disabled =
-                !editable || (!checked && limit !== "ALL" && selected.length >= maxCount)
-
+              const checked = selected.includes(q.id)
+              const disabled = !editable
               return (
                 <button
                   key={q.id}
-                  onClick={() => toggle(q.id as QuizType)}
+                  type="button"
+                  onClick={() => toggle(q.id)}
                   disabled={disabled}
                   style={{
                     ...styles.quizCard,
@@ -331,26 +188,18 @@ export default function SelectQuizzesPage() {
                     </div>
                   </div>
 
-                  {q.description ? (
-                    <div style={styles.quizDesc}>{q.description}</div>
-                  ) : (
-                    <div style={styles.quizDescMuted}>（説明なし）</div>
-                  )}
-
-                  <div style={styles.quizMeta}>ID: {q.id}</div>
+                  <div style={q.description ? styles.quizDesc : styles.quizDescMuted}>
+                    {q.description || "（説明なし）"}
+                  </div>
 
                   <div style={styles.quizActions}>
                     <div style={styles.ctaRow}>
                       <span style={styles.ctaLabel}>ここを押して</span>
                       <span style={styles.ctaStrong}>{checked ? "解除" : "追加"}</span>
                     </div>
-                    {!editable ? (
-                      <div style={styles.ctaNote}>ロック中のため編集できません</div>
-                    ) : disabled ? (
-                      <div style={styles.ctaNote}>上限に達しています</div>
-                    ) : (
-                      <div style={styles.ctaNote}>タップで切替</div>
-                    )}
+                    <div style={styles.ctaNote}>
+                      {editable ? "タップで切替" : "ロック中のため編集できません"}
+                    </div>
                   </div>
                 </button>
               )
@@ -360,15 +209,16 @@ export default function SelectQuizzesPage() {
 
         <footer style={styles.footer}>
           <button
+            type="button"
             onClick={handleSave}
-            disabled={!editable || saving}
+            disabled={!editable || saving || selected.length === 0}
             style={{
               ...styles.saveBtn,
-              ...(editable ? styles.saveBtnOn : styles.saveBtnOff),
+              ...(editable && selected.length > 0 ? styles.saveBtnOn : styles.saveBtnOff),
               ...(saving ? styles.saveBtnSaving : null),
             }}
           >
-            {saving ? "保存中..." : editable ? "この内容で保存して進む" : "変更可能日まで編集できません"}
+            {saving ? "保存中..." : "この内容で保存して進む"}
           </button>
         </footer>
       </div>
@@ -385,29 +235,6 @@ const styles: any = {
     background: "white",
     padding: 14,
   },
-
-  industryBar: {
-    marginTop: 12,
-    border: "1px solid var(--border)",
-    borderRadius: 16,
-    background: "white",
-    padding: "12px 12px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 12,
-  },
-  filterBtn: {
-    borderRadius: 14,
-    padding: "10px 12px",
-    border: "1px solid var(--border)",
-    fontWeight: 900,
-    cursor: "pointer",
-    whiteSpace: "nowrap",
-  },
-  filterBtnOn: { background: "#111827", color: "white" },
-  filterBtnOff: { background: "#f9fafb", color: "#111827" },
-
   summaryCard: {
     marginTop: 12,
     border: "1px solid var(--border)",
@@ -415,7 +242,6 @@ const styles: any = {
     background: "white",
     padding: "12px 12px",
   },
-
   infoCard: { marginTop: 12 },
   notice: {
     borderRadius: 14,
@@ -426,9 +252,7 @@ const styles: any = {
   },
   noticeWarn: { background: "#fff7ed", borderColor: "#fed7aa" },
   noticeOk: { background: "#ecfdf5", borderColor: "#a7f3d0" },
-
   mini: { fontSize: 12, opacity: 0.75, marginTop: 8 },
-
   alert: {
     marginTop: 12,
     border: "1px solid #fecaca",
@@ -437,13 +261,11 @@ const styles: any = {
     padding: "10px 12px",
     fontWeight: 800,
   },
-
   grid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
     gap: 12,
   },
-
   quizCard: {
     textAlign: "left",
     border: "1px solid var(--border)",
@@ -455,24 +277,18 @@ const styles: any = {
   },
   quizCardChecked: { borderColor: "#4f46e5", boxShadow: "0 10px 24px rgba(79,70,229,0.12)" },
   quizCardDisabled: { opacity: 0.55, cursor: "not-allowed" },
-
   quizHead: { display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 },
   quizTitle: { fontWeight: 900 },
   pill: { borderRadius: 999, padding: "6px 10px", fontSize: 12, fontWeight: 900 },
   pillChecked: { background: "#4f46e5", color: "white" },
   pillEmpty: { background: "#f3f4f6", color: "#111827" },
-
   quizDesc: { marginTop: 8, opacity: 0.8, lineHeight: 1.6, fontSize: 13, minHeight: 42 },
   quizDescMuted: { marginTop: 8, opacity: 0.5, lineHeight: 1.6, fontSize: 13, minHeight: 42 },
-
-  quizMeta: { marginTop: 10, fontSize: 12, opacity: 0.6 },
-
   quizActions: { marginTop: 12, borderTop: "1px solid var(--border)", paddingTop: 10 },
   ctaRow: { display: "flex", gap: 8, alignItems: "baseline" },
   ctaLabel: { fontSize: 12, opacity: 0.7 },
   ctaStrong: { fontSize: 14, fontWeight: 900 },
   ctaNote: { marginTop: 6, fontSize: 12, opacity: 0.7 },
-
   footer: { marginTop: 16, paddingBottom: 24, display: "flex", justifyContent: "center" },
   saveBtn: {
     width: "min(520px, 100%)",
